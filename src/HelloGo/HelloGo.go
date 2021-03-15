@@ -1,18 +1,33 @@
 package main
 
-import(
-	"fmt"
+import (
+    "fmt"
+    "net/http"
 )
 
-type Employee struct {
-	Id int
-	FirstName string
+type dollars float32
+
+func (d dollars) String() string {
+    return fmt.Sprintf("$%.2f", d)
 }
 
-func main()  {
-	
-	res := ParseRomanNum("MCM")
-	fmt.Println(res)
+type database map[string]dollars
+
+func (db database) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+    for item, price := range db {
+        fmt.Fprintf(w, "%s: %s\n", item, price)
+    }
+}
+
+func main() {
+    account := Account{FirstName:"tao",LastName:"ranqing"}
+	fmt.Println(account)
+	account.ChangeName("lin","junjie")
+	fmt.Println(account)
+	employee := Employee{account:account}
+	fmt.Println(employee.store)
+	employee.AddCredits(100)
+	fmt.Println(employee.store)
 }
 
 func PrintFizzBuzz(){
